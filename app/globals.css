@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+:root {
+  --background: #06080f;
+  --foreground: #f4f7ff;
+  --muted: #99a4bf;
+  --surface: #101527;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+}
+
+* {
+  border-color: color-mix(in oklab, white 12%, transparent);
+}
