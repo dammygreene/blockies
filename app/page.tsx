@@ -93,8 +93,13 @@ export default function Home() {
 
       setWalletAddress(account);
       setFeedback("Wallet connected. Your blockie is ready to mint.");
-    } catch {
-      setFeedback("Wallet connection was cancelled or failed.");
+    } catch (error) {
+      const errorCode = typeof error === "object" && error && "code" in error ? Number(error.code) : undefined;
+      if (errorCode === 4001) {
+        setFeedback("Wallet connection request was rejected.");
+      } else {
+        setFeedback("Wallet connection failed. Check wallet lock state and network, then try again.");
+      }
     } finally {
       setIsConnecting(false);
     }
@@ -250,7 +255,7 @@ export default function Home() {
           </div>
           <p className="mt-5 text-xs text-white/60">
             Note: this build currently demonstrates UI and local mint-state behavior. Contract integration is required
-            for real onchain minting and global mint stats.
+            for real on-chain minting and global mint stats.
           </p>
         </section>
       </main>
