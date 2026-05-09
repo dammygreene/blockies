@@ -1,7 +1,8 @@
 "use client";
 
 import makeBlockie from "ethereum-blockies-base64";
-import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import { useMemo, useState } from "react";
 
 const TOTAL_SUPPLY = 10_000;
 const MINT_PRICE = "0.0005 ETH";
@@ -57,7 +58,9 @@ export default function Home() {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
   const [feedback, setFeedback] = useState("Connect your wallet to reveal your identity.");
-  const [mintedCount, setMintedCount] = useState(0);
+  const [mintedCount, setMintedCount] = useState(() =>
+    typeof window === "undefined" ? 0 : getMintedWallets().length,
+  );
 
   const activeAddress = walletAddress || FALLBACK_ADDRESS;
   const blockieSrc = useMemo(() => makeBlockie(activeAddress), [activeAddress]);
@@ -70,13 +73,6 @@ export default function Home() {
   const mintedKey = walletAddress ? `blockies-minted:${walletAddress.toLowerCase()}` : "";
   const alreadyMinted =
     typeof window !== "undefined" && mintedKey ? localStorage.getItem(mintedKey) === "1" : false;
-
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    setMintedCount(getMintedWallets().length);
-  }, []);
 
   const connectWallet = async () => {
     if (!window.ethereum) {
@@ -195,9 +191,12 @@ export default function Home() {
                 <span>{identityTier}</span>
               </div>
               <div className="rounded-2xl border bg-black/40 p-4">
-                <img
+                <Image
                   src={blockieSrc}
                   alt="Wallet blockie preview"
+                  width={224}
+                  height={224}
+                  unoptimized
                   className="mx-auto h-48 w-48 rounded-xl border border-white/20 shadow-2xl sm:h-56 sm:w-56"
                 />
               </div>
