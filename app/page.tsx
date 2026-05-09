@@ -5,7 +5,8 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 
 const TOTAL_SUPPLY = 10_000;
-const MINT_PRICE = "0.0005 ETH";
+const MINT_PRICE_ETH = 0.0005;
+const MINT_PRICE = `${MINT_PRICE_ETH} ETH`;
 const FALLBACK_ADDRESS = "0x000000000000000000000000000000000000dEaD";
 
 type Palette = {
@@ -116,11 +117,11 @@ export default function Home() {
 
     try {
       setIsMinting(true);
-      setFeedback("Submitting mint transaction...");
+      setFeedback("Submitting demo mint transaction...");
       await new Promise((resolve) => setTimeout(resolve, 1500));
       localStorage.setItem(mintedKey, "1");
       setMintedCount(getMintedWallets().length);
-      setFeedback("Mint confirmed. Your wallet face is now claimed onchain.");
+      setFeedback("Demo mint confirmed locally. Connect contract calls to mint onchain.");
     } catch {
       setFeedback("Mint failed. Please try again.");
     } finally {
@@ -211,7 +212,10 @@ export default function Home() {
         </section>
 
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard label="Minted" value={`${mintedCount.toLocaleString()} / ${TOTAL_SUPPLY.toLocaleString()}`} />
+          <StatCard
+            label="Local Mints (Demo)"
+            value={`${mintedCount.toLocaleString()} / ${TOTAL_SUPPLY.toLocaleString()}`}
+          />
           <StatCard label="Remaining" value={`${Math.max(TOTAL_SUPPLY - mintedCount, 0).toLocaleString()}`} />
           <StatCard label="Mint Price" value={MINT_PRICE} />
           <StatCard label="Mint Rule" value="One per wallet" />
@@ -244,6 +248,10 @@ export default function Home() {
             <FaqItem question="Is each image unique?" answer="Yes. Each address maps to one deterministic blockie output." />
             <FaqItem question="What chain is this on?" answer="Ethereum Mainnet." />
           </div>
+          <p className="mt-5 text-xs text-white/60">
+            Note: this build currently demonstrates UI and local mint-state behavior. Contract integration is required
+            for real onchain minting and global mint stats.
+          </p>
         </section>
       </main>
 
